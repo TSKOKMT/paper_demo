@@ -16,11 +16,19 @@
                 width: 100%;
                 height: 100vh;
             }
+
+            button {
+                position: fixed;
+                left: 10px;
+                top: 10px;
+            }
         </style>
     </head>
 
     <body>
         <canvas id="myCanvas"></canvas>
+        <button id="downloadButton">Download SVG</button>
+
         <script>
             paper.setup(document.getElementById('myCanvas'));
 
@@ -95,6 +103,17 @@
                 // マウスの座標を取得
                 pointer = event.point;
             };
+
+            document.getElementById('downloadButton').addEventListener('click', function () {
+                var svg = project.exportSVG({ asString: true });
+                var blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+                var url = URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.download = 'paperjs-drawing.svg';
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+            });
         </script>
     </body>
 
