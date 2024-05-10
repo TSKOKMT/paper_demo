@@ -104,15 +104,17 @@
                 pointer = event.point;
             };
 
-            document.getElementById('downloadButton').addEventListener('click', function () {
-                var svg = project.exportSVG({ asString: true });
-                var blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-                var url = URL.createObjectURL(blob);
-                var link = document.createElement('a');
-                link.download = 'paperjs-drawing.svg';
-                link.href = url;
-                link.click();
-                URL.revokeObjectURL(url);
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('downloadButton').addEventListener('click', function () {
+                    var svg = project.exportSVG({ asString: true });
+                    var blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+                    var url = URL.createObjectURL(blob);
+                    var link = document.createElement('a');
+                    link.download = 'paperjs-drawing.svg';
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                });
             });
         </script>
     </body>
