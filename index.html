@@ -43,13 +43,15 @@
 
             path.smooth();
 
-            var message = 'Serendie Serendie Serendie';
+            var message = 'Serendie Serendie Serendie Serendie';
             var textItems = []; // 生成されたテキストアイテムを格納する配列
 
             paper.view.onFrame = function (event) {
-                var width = paper.view.size.width;
-                var height = paper.view.size.height;
+                var width = window.innerWidth;
+                var height = window.innerHeight;
                 var unit = Math.sqrt(width * height) / 120;
+
+                path.strokeWidth = unit / 6;
 
                 // 既存のテキストをクリア
                 textItems.forEach(function (item) {
@@ -60,8 +62,12 @@
                 // パスを動かしてゆらゆらさせる
                 for (var i = 0; i < path.segments.length; i++) {
                     var segment = path.segments[i];
-                    var sinus = Math.sin(event.time * 3 + i * 4.15);
-                    segment.point.y += sinus * unit / 2;
+
+                    var sinH = Math.sin(event.time * (2.2 + i * .3) + i * 2.5);
+                    var sinV = Math.sin(event.time * (2.5 + i * .2) + i * 5.6);
+
+                    segment.point.x = width / 5 * (i + 1) + sinH * unit * 12;
+                    segment.point.y = height / 3 * (i % 2 + 1) + sinV * unit * 12;
                 }
                 path.smooth();
 
@@ -77,7 +83,7 @@
                         fillColor: 'black',
                         fontFamily: 'Roboto',
                         fontWeight: 'bold',
-                        fontSize: 60
+                        fontSize: 6 * unit
                     });
 
                     char.rotate(tangent.angle, point);
