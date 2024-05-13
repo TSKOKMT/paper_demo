@@ -72,7 +72,7 @@
                     var segment = path.segments[i];
 
                     var sinH = Math.sin(event.time * (2.2 + i * .3) + i * 2.5);
-                    var sinV = Math.sin(event.time * (2.5 + i * .2) + i * 5.6);
+                    var sinV = Math.sin(event.time * (2.5 + i * .2) + i * 3);
 
                     segment.point.x = width / 5 * (i + 1) + sinH * unit * 12;
                     segment.point.y = height / 3 * (i % 2 + 1) + sinV * unit * 12;
@@ -81,7 +81,7 @@
 
                 // 新しいテキストを生成
                 for (var i = 0; i < message.length; i++) {
-                    var offset = path.length / message.length * i;
+                    var offset = path.length / message.length * (i + .5);
                     var point = path.getPointAt(offset);
                     var tangent = path.getTangentAt(offset);
 
@@ -91,7 +91,8 @@
                         fillColor: 'black',
                         fontFamily: 'Roboto',
                         fontWeight: 400,
-                        fontSize: 6 * unit
+                        fontSize: 6 * unit,
+                        justification: 'center'
                     });
 
                     char.rotate(tangent.angle, point);

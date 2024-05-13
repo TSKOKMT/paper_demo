@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Draw a Circle with Paper.js</title>
+
+        <style>
+            body,
+            html {
+                margin: 0;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            canvas {
+                width: 100%;
+                height: 100%;
+            }
+
+            button {
+                position: fixed;
+                right: 10px;
+                top: 10px;
+                height: 60px;
+                font-size: 30px;
+                padding-left: 15px;
+                padding-right: 15px;
+                border-radius: 30px;
+                background-color: transparent;
+                border: 3px solid black;
+            }
+
+            button:hover {
+                background-color: black;
+                color: white;
+            }
+        </style>
+
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.17/paper-full.min.js"></script>
+    </head>
+
+    <body>
+        <canvas id="myCanvas" resize></canvas>
+        <button id="downloadButton">Download SVG</button>
+
+        <script>
+            paper.install(window);
+
+            paper.setup(document.getElementById('myCanvas'));
+
+            view.onFrame = function (event) {
+                project.activeLayer.removeChildren();
+
+                let width = view.size.width / 3;
+                let height = view.size.height;
+                let unit = Math.sqrt(width * height) / 120;
+
+                let weight = 12 * unit;
+
+                let outerRadiusT = width / 2.5;
+                let outerRadiusB = width / 2;
+
+                let innerRadiusT = outerRadiusT - weight;
+                let innerRadiusB = outerRadiusB - weight;
+
+                let midRadiusT = (outerRadiusT + innerRadiusT) / 2;
+                let midRadiusB = (outerRadiusB + innerRadiusB) / 2;
+
+                let centerT = new Point(outerRadiusT + (width / 2 - outerRadiusT), outerRadiusT);
+                let centerB = new Point(outerRadiusB + (width / 2 - outerRadiusB), height - outerRadiusB);
+
+                let intersections = twoCirclesIntersection(centerT.x, centerT.y, outerRadiusT, centerB.x, centerB.y, outerRadiusB);
+                let tanT;
+                let tanB;
+                if (intersections.length >= 2) {
+                    tanT = Math.atan2(centerT.y - intersections[1].y, centerT.x - intersections[1].x);
+                    tanB = Math.atan2(centerB.y - intersections[1].y, centerB.x - intersections[1].x);
+                }
+                else {
+                    tanT = -Math.PI / 2;
+                    tanB = Math.PI / 2;
+                }
+
+                let angleT = tanT * Math.sin(event.time);
+                let angleB = tanB * Math.sin(event.time * 1.2);
+
+                let pointT = new Point(centerT.subtract(new Point(Math.cos(angleT), Math.sin(angleT)).multiply(midRadiusT)));
+                let pointB = new Point(centerB.add(new Point(Math.cos(angleB), Math.sin(angleB)).multiply(midRadiusB)));
+
+                let path = new paper.Path({
+                    strokeColor: 'black',
+                    strokeWidth: 2,
+                    visible: false
+                });
+
+                path.add(pointT);
+                path.add(pointB);
+
+                let handleLength = pointT.getDistance(pointB) / 2;
+                let handleAngleT = angleT + Math.PI / 2;
+                let handleAngleB = angleB - Math.PI / 2;
+
+                path.segments[0].handleOut = new Point(Math.cos(handleAngleT), Math.sin(handleAngleT)).multiply(handleLength);
+                path.segments[1].handleIn = new Point(Math.cos(handleAngleB), Math.sin(handleAngleB)).multiply(handleLength);
+
+                let word = 'Serendie';
+                let textHeight = 12 * unit;
+
+                for (let i = 0; i < word.length; i++) {
+                    let offset = path.length / (word.length + 1) * (i + 1);
+                    let point = path.getPointAt(offset);
+                    point.y += textHeight / 3;
+                    let tangent = path.getTangentAt(offset);
+
+                    let char = new paper.PointText({
+                        point: point,
+                        content: word[i],
+                        fillColor: 'black',
+                        fontFamily: 'Roboto',
+                        fontWeight: 400,
+                        fontSize: textHeight,
+                        justification: 'center'
+                    });
+
+                    //char.rotate(tangent.angle, point);
+                }
+
+                /*new Path.Circle({
+                    center: centerT,
+                    radius: outerRadiusT,
+                    fillColor: null,
+                    strokeColor: 'red',
+                    strokeWidth: 2
+                });
+                new Path.Circle({
+                    center: centerB,
+                    radius: outerRadiusB,
+                    fillColor: null,
+                    strokeColor: 'red',
+                    strokeWidth: 2
+                });*/
+
+                drawModule(centerT.x, centerT.y, innerRadiusT, outerRadiusT, angleT + Math.PI, 'black');
+                drawModule(centerB.x, centerB.y, innerRadiusB, outerRadiusB, angleB, 'black');
+
+                /*new Path.Circle({
+                    center: path.segments[0].point.add(path.segments[0].handleOut),
+                    radius: unit,
+                    fillColor: 'red'
+                });
+                new Path.Circle({
+                    center: path.segments[1].point.add(path.segments[1].handleIn),
+                    radius: unit,
+                    fillColor: 'red'
+                });
+
+                for (let i = 0; i < intersections.length; i++) {
+                    new Path.Circle({
+                        center: intersections[i],
+                        radius: unit,
+                        fillColor: 'blue'
+                    });
+                }*/
+            }
+
+            function drawModule(centerX, centerY, innerRadius, outerRadius, angle, fillColor) {
+                let center = new paper.Point(centerX, centerY);
+
+                let outerArc = new paper.Path.Arc({
+                    from: center.add([0, -outerRadius]),
+                    through: center.add([outerRadius, 0]),
+                    to: center.add([0, outerRadius])
+                });
+
+                let innerArc = new paper.Path.Arc({
+                    from: center.add([0, -innerRadius]),
+                    through: center.add([innerRadius, 0]),
+                    to: center.add([0, innerRadius])
+                });
+                innerArc.reverse();
+
+                let module = outerArc.join(innerArc);
+                module.closed = true;
+                module.fillColor = fillColor;
+                module.rotate(radToDeg(angle) + 90, center);
+            }
+
+            //Download SVG
+
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('downloadButton').addEventListener('click', downloadSVG);
+            });
+            function downloadSVG() {
+                var svg = paper.project.exportSVG({ asString: true });
+                var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+                var url = URL.createObjectURL(blob);
+
+                var a = document.createElement('a');
+                a.download = 'drawing.svg';
+                a.href = url;
+                a.click();
+            }
+
+            //Tool
+            function radToDeg(radians) {
+                return radians * (180 / Math.PI);
+            }
+            function degToRad(degrees) {
+                return degrees * (Math.PI / 180);
+            }
+
+            function twoCirclesIntersection(x1, y1, r1, x2, y2, r2) {
+                // 中心間の距離を計算
+                var dx = x2 - x1;
+                var dy = y2 - y1;
+                var d = Math.sqrt(dx * dx + dy * dy);
+
+                // 交点が存在しない場合
+                if (d > r1 + r2 || d < Math.abs(r1 - r2)) {
+                    return []; // 交点なし
+                }
+
+                // 交点が存在する場合
+                var a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
+                var h = Math.sqrt(r1 * r1 - a * a);
+                var xm = x1 + a * dx / d;
+                var ym = y1 + a * dy / d;
+                var xs1 = xm + h * dy / d;
+                var ys1 = ym - h * dx / d;
+                var xs2 = xm - h * dy / d;
+                var ys2 = ym + h * dx / d;
+
+                // 交点が1つ（内接する場合）
+                if (d === r1 + r2 || d === Math.abs(r1 - r2)) {
+                    return [{ x: xs1, y: ys1 }];
+                }
+
+                // 通常は2つの交点が存在
+                return [{ x: xs1, y: ys1 }, { x: xs2, y: ys2 }];
+            }
+        </script>
+    </body>
+
+</html>
