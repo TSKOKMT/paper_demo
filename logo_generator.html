@@ -30,6 +30,7 @@
                 border-radius: 30px;
                 background-color: transparent;
                 border: 3px solid black;
+                color: black;
             }
 
             button:hover {
@@ -126,7 +127,10 @@
                         justification: 'center'
                     });
 
+                    point.y -= textHeight / 3;
+
                     //char.rotate(tangent.angle, point);
+                    char.rotate(i * 74 + event.time * (Math.sin(i + 1) * 120), point);
                 }
 
                 /*new Path.Circle({
