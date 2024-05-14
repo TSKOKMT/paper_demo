@@ -96,7 +96,7 @@
                 let colorM = 'black';
 
                 let indexT = Math.floor(randomS(0, colors.length, seed));
-                let indexB = Math.floor(randomS(0, colors.length, seed + 1));
+                let indexB = Math.floor(randomS(0, colors.length, seed + 10000));
                 console.log(indexT);
                 console.log(indexB);
                 if (colors.length >= 2) {
@@ -319,9 +319,9 @@
             }
 
             function randomS(min, max, seed_) {
-                const a = 4294967291;
+                const a = 1664525;
                 const c = 1013904223;
-                const m = 2147483647; // 2^32
+                const m = 4294967296; // 2^32
                 seed_ = (a * seed_ + c) % m;
                 return (seed_ / m) * (max - min) + min;
             }
