@@ -95,11 +95,10 @@
                 let colorB = 'black';
                 let colorM = 'black';
 
-                let indexT = Math.floor(randomS(0, colors.length, seed));
-                let indexB = Math.floor(randomS(0, colors.length, seed + 10000));
-                console.log(indexT);
-                console.log(indexB);
                 if (colors.length >= 2) {
+                    let indexT = Math.floor(randomS(0, colors.length, seed));
+                    let indexB = Math.floor(randomS(0, colors.length, seed + pow(3, 5)));
+
                     colorT = colors[indexT];
                     colorB = colors[indexB];
                     colorM = colorT.multiply(.5).add(colorB.multiply(.5));
