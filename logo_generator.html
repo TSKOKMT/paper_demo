@@ -64,6 +64,10 @@
 
             paper.setup(document.getElementById('myCanvas'));
 
+            let width;
+            let height;
+            let unit;
+
             var colors = [];
             let seed = 0;
 
@@ -78,9 +82,9 @@
             view.onFrame = function (event) {
                 project.activeLayer.removeChildren();
 
-                var width = view.size.width / 3;
-                var height = view.size.height;
-                let unit = Math.sqrt(width * height) / 120;
+                width = view.size.width / 3;
+                height = view.size.height;
+                unit = Math.sqrt(width * height) / 120;
 
                 //Set color
 
