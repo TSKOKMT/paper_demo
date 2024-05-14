@@ -78,8 +78,8 @@
                 let colorB = 'black';
                 let colorM = 'black';
                 if (colors.length >= 2) {
-                    colorT = colors[randomS(0, colors.length, seed)];
-                    colorB = colors[randomS(0, colors.length, seed + 1)];
+                    colorT = colors[Math.floor(randomS(0, colors.length, seed))];
+                    colorB = colors[Math.floor(randomS(0, colors.length, seed + 1))];
                     colorM = colorT.multiply(.5).add(colorB.multiply(.5));
                 }
 
@@ -299,7 +299,7 @@
                     return state / m;
                 }
 
-                // minとmaxの範囲でランダムな数値を返す関数
+                // min以上max未満の範囲でランダムな数値を返す関数
                 function randomInRange() {
                     return seededRandom() * (max - min) + min;
                 }
