@@ -304,12 +304,10 @@
             }
 
             function randomS(min, max, seed_) {
-                let state = seed_;
                 const a = 1664525;
                 const c = 1013904223;
                 const m = Math.pow(2, 32);
-                state = (a * state + c) % m;
-                return (state / m) * (max - min) + min;
+                return (((a * seed_ + c) % m) / m) * (max - min) + min;
             }
         </script>
     </body>
