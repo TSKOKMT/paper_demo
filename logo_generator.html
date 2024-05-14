@@ -61,7 +61,6 @@
                 for (var x = 0; x < raster.width; x++) {
                     var color = raster.getPixel(x, 0);
                     colors.push(color);
-                    console.log(x);
                 }
             };
 
@@ -78,8 +77,8 @@
                 let colorB = 'black';
                 let colorM = 'black';
                 if (colors.length >= 2) {
-                    colorT = colors[Math.floor(randomS(0, colors.length, seed))];
-                    colorB = colors[Math.floor(randomS(0, colors.length, seed + 1))];
+                    colorT = colors[Math.floor(randomR(0, colors.length))];
+                    colorB = colors[Math.floor(randomR(0, colors.length))];
                     colorM = colorT.multiply(.5).add(colorB.multiply(.5));
                 }
 
@@ -284,6 +283,10 @@
 
                 // 通常は2つの交点が存在
                 return [{ x: xs1, y: ys1 }, { x: xs2, y: ys2 }];
+            }
+
+            function randomR(min, max) {
+                return Math.random() * (max - min) + min;
             }
 
             function randomS(min, max, seed) {
