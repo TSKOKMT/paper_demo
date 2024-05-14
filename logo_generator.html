@@ -91,7 +91,7 @@
                 height = view.size.height;
                 unit = Math.sqrt(width * height) / 120;
 
-                isolation = 30 * unit;
+                isolation = 12 * unit;
 
                 //Set color
 
@@ -230,6 +230,16 @@
                         fillColor: 'blue'
                     });
                 }*/
+
+                //Draw frame
+
+                new Path.Rectangle({
+                    point: [0, 0],
+                    size: [width, height],
+                    fillColor: null,
+                    strokeColor: 'black',
+                    strokeWidth: 1
+                });
             }
 
             //Draw module
