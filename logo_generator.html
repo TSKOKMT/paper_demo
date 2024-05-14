@@ -21,8 +21,6 @@
 
             button {
                 position: fixed;
-                right: 10px;
-                top: 10px;
                 height: 60px;
                 font-size: 30px;
                 padding-left: 15px;
@@ -37,6 +35,15 @@
                 background-color: black;
                 color: white;
             }
+
+            #downloadButton {
+                right: 10px;
+                top: 10px;
+            }
+            #shuffleButton {
+                right: 10px;
+                top: calc(10px + 60px + 10px);
+            }
         </style>
 
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
@@ -47,6 +54,7 @@
     <body>
         <canvas id="myCanvas" resize></canvas>
         <button id="downloadButton">Download SVG</button>
+        <button id="shuffleButton">Shuffle Colors</button>
 
         <script>
             paper.install(window);
@@ -78,7 +86,7 @@
                 let colorM = 'black';
                 if (colors.length >= 2) {
                     colorT = colors[Math.floor(randomS(0, colors.length, seed))];
-                    colorB = colors[Math.floor(randomS(0, colors.length, seed + 1))];
+                    colorB = colors[Math.floor(randomS(0, colors.length, seed + 10))];
                     colorM = colorT.multiply(.5).add(colorB.multiply(.5));
                 }
 
@@ -201,12 +209,6 @@
                 }*/
             }
 
-            //Key down
-
-            document.addEventListener('keydown', (event) => {
-                seed += 10;
-            });
-
             //Draw module
 
             function drawModule(centerX, centerY, innerRadius, outerRadius, angle, fillColor) {
@@ -231,11 +233,15 @@
                 module.rotate(radToDeg(angle) + 90, center);
             }
 
-            //Download SVG
+            //Add events
 
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('downloadButton').addEventListener('click', downloadSVG);
+                document.getElementById('shuffleButton').addEventListener('click', shuffleColors);
             });
+
+            //Actions
+
             function downloadSVG() {
                 var svg = paper.project.exportSVG({ asString: true });
                 var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
@@ -245,6 +251,11 @@
                 a.download = 'drawing.svg';
                 a.href = url;
                 a.click();
+            }
+
+            function shuffleColors() {
+                seed = Math.floor(randomR(0, 1000000));
+                console.log("Seed : " + seed);
             }
 
             //Tool
@@ -290,10 +301,7 @@
             }
 
             function randomS(min, max, seed) {
-                // 内部状態を持つための変数
                 let state = seed;
-
-                // 線形合同法に基づく擬似乱数生成関数
                 const a = 1664525;
                 const c = 1013904223;
                 const m = Math.pow(2, 32);
