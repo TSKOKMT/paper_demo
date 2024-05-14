@@ -87,9 +87,14 @@
                 let colorT = 'black';
                 let colorB = 'black';
                 let colorM = 'black';
+
+                let indexT = Math.floor(randomS(0, colors.length, seed));
+                let indexB = Math.floor(randomS(0, colors.length, seed + 10));
+                console.log(indexT);
+                console.log(indexB);
                 if (colors.length >= 2) {
-                    colorT = colors[Math.floor(randomS(0, colors.length, seed))];
-                    colorB = colors[Math.floor(randomS(0, colors.length, seed + 10))];
+                    colorT = colors[indexT];
+                    colorB = colors[indexB];
                     colorM = colorT.multiply(.5).add(colorB.multiply(.5));
                 }
 
