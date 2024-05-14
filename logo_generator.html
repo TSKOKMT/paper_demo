@@ -53,6 +53,17 @@
 
             paper.setup(document.getElementById('myCanvas'));
 
+            var colors = [];
+
+            var raster = new Raster('palette01.png');
+            raster.onLoad = function () {
+                for (var x = 0; x < raster.width; x++) {
+                    var color = raster.getPixel(x, 0);
+                    colors.push(color);
+                    console.log(x);
+                }
+            };
+
             view.onFrame = function (event) {
                 project.activeLayer.removeChildren();
 
@@ -101,7 +112,7 @@
                 path.add(pointT);
                 path.add(pointB);
 
-                let handleLength = pointT.getDistance(pointB) / 2;
+                let handleLength = 45 * unit/*pointT.getDistance(pointB) / 2*/;
                 let handleAngleT = angleT + Math.PI / 2;
                 let handleAngleB = angleB - Math.PI / 2;
 
@@ -148,8 +159,8 @@
                     strokeWidth: 2
                 });*/
 
-                drawModule(centerT.x, centerT.y, innerRadiusT, outerRadiusT, angleT + Math.PI, 'black');
-                drawModule(centerB.x, centerB.y, innerRadiusB, outerRadiusB, angleB, 'black');
+                if (colors.length >= 2) drawModule(centerT.x, centerT.y, innerRadiusT, outerRadiusT, angleT + Math.PI, colors[0]);
+                if (colors.length >= 2) drawModule(centerB.x, centerB.y, innerRadiusB, outerRadiusB, angleB, colors[1]);
 
                 /*new Path.Circle({
                     center: path.segments[0].point.add(path.segments[0].handleOut),
