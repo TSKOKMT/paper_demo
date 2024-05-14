@@ -30,10 +30,13 @@
                 border: 3px solid black;
                 color: black;
             }
-
             button:hover {
                 background-color: black;
                 color: white;
+            }
+            button:active {
+                background-color: black;
+                color: black;
             }
 
             #downloadButton {
@@ -300,8 +303,8 @@
                 return Math.random() * (max - min) + min;
             }
 
-            function randomS(min, max, seed) {
-                let state = seed;
+            function randomS(min, max, seed_) {
+                let state = seed_;
                 const a = 1664525;
                 const c = 1013904223;
                 const m = Math.pow(2, 32);
