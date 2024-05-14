@@ -251,7 +251,10 @@
             //Actions
 
             function downloadSVG() {
-                var svg = paper.project.exportSVG({ asString: true });
+                var svg = paper.project.exportSVG({ 
+                    asString: true,
+                    bounds: new Rectangle(0, 0, width, height)
+                });
                 var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
                 var url = URL.createObjectURL(blob);
 
