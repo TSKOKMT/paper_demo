@@ -54,6 +54,7 @@
             paper.setup(document.getElementById('myCanvas'));
 
             var colors = [];
+            let seed = 0;
 
             var raster = new Raster('palette01.png');
             raster.onLoad = function () {
@@ -77,8 +78,8 @@
                 let colorB = 'black';
                 let colorM = 'black';
                 if (colors.length >= 2) {
-                    colorT = colors[0];
-                    colorB = colors[1];
+                    colorT = colors[randomS(0, colors.length, seed)];
+                    colorB = colors[randomS(0, colors.length, seed + 1)];
                     colorM = colorT.multiply(.5).add(colorB.multiply(.5));
                 }
 
@@ -201,6 +202,14 @@
                 }*/
             }
 
+            //Key down
+
+            document.addEventListener('keydown', (event) => {
+                seed += 10;
+            });
+
+            //Draw module
+
             function drawModule(centerX, centerY, innerRadius, outerRadius, angle, fillColor) {
                 let center = new paper.Point(centerX, centerY);
 
@@ -275,6 +284,27 @@
 
                 // 通常は2つの交点が存在
                 return [{ x: xs1, y: ys1 }, { x: xs2, y: ys2 }];
+            }
+
+            function randomS(min, max, seed) {
+                // 内部状態を持つための変数
+                let state = seed;
+
+                // 線形合同法に基づく擬似乱数生成関数
+                function seededRandom() {
+                    const a = 1664525;
+                    const c = 1013904223;
+                    const m = Math.pow(2, 32);
+                    state = (a * state + c) % m;
+                    return state / m;
+                }
+
+                // minとmaxの範囲でランダムな数値を返す関数
+                function randomInRange() {
+                    return seededRandom() * (max - min) + min;
+                }
+
+                return randomInRange;
             }
         </script>
     </body>
