@@ -71,6 +71,19 @@
                 let height = view.size.height;
                 let unit = Math.sqrt(width * height) / 120;
 
+                //Set color
+
+                let colorT = 'black';
+                let colorB = 'black';
+                let colorM = 'black';
+                if (colors.length >= 2) {
+                    colorT = colors[0];
+                    colorB = colors[1];
+                    colorM = colorT.multiply(.5).add(colorB.multiply(.5));
+                }
+
+                //Set shape
+
                 let weight = 12 * unit;
 
                 let outerRadiusT = width / 2.5;
@@ -100,6 +113,8 @@
                 let angleT = tanT * Math.sin(event.time);
                 let angleB = tanB * Math.sin(event.time * 1.2);
 
+                //Set path
+
                 let pointT = new Point(centerT.subtract(new Point(Math.cos(angleT), Math.sin(angleT)).multiply(midRadiusT)));
                 let pointB = new Point(centerB.add(new Point(Math.cos(angleB), Math.sin(angleB)).multiply(midRadiusB)));
 
@@ -122,6 +137,8 @@
                 let word = 'Serendie';
                 let textHeight = 12 * unit;
 
+                //Draw texts
+
                 for (let i = 0; i < word.length; i++) {
                     let offset = path.length / (word.length + 1) * (i + 1);
                     let point = path.getPointAt(offset);
@@ -131,7 +148,7 @@
                     let char = new paper.PointText({
                         point: point,
                         content: word[i],
-                        fillColor: 'black',
+                        fillColor: colorM,
                         fontFamily: 'Roboto',
                         fontWeight: 400,
                         fontSize: textHeight,
@@ -159,8 +176,10 @@
                     strokeWidth: 2
                 });*/
 
-                if (colors.length >= 2) drawModule(centerT.x, centerT.y, innerRadiusT, outerRadiusT, angleT + Math.PI, colors[0]);
-                if (colors.length >= 2) drawModule(centerB.x, centerB.y, innerRadiusB, outerRadiusB, angleB, colors[1]);
+                //Draw shapes
+
+                drawModule(centerT.x, centerT.y, innerRadiusT, outerRadiusT, angleT + Math.PI, colorT);
+                drawModule(centerB.x, centerB.y, innerRadiusB, outerRadiusB, angleB, colorB);
 
                 /*new Path.Circle({
                     center: path.segments[0].point.add(path.segments[0].handleOut),
