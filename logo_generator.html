@@ -110,13 +110,14 @@
 
                 //Set shape
 
-                let weight = 12 * unit;
+                let weightT = Math.floor(randomS(4, 36, seed + Math.pow(7, 4))) * unit;
+                let weightB = Math.floor(randomS(4, 36, seed + Math.pow(7, 5))) * unit;
 
                 let outerRadiusT = width / 2.5;
                 let outerRadiusB = width / 2;
 
-                let innerRadiusT = outerRadiusT - weight;
-                let innerRadiusB = outerRadiusB - weight;
+                let innerRadiusT = outerRadiusT - weightT;
+                let innerRadiusB = outerRadiusB - weightB;
 
                 let midRadiusT = (outerRadiusT + innerRadiusT) / 2;
                 let midRadiusB = (outerRadiusB + innerRadiusB) / 2;
