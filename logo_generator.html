@@ -77,8 +77,8 @@
                 let colorB = 'black';
                 let colorM = 'black';
                 if (colors.length >= 2) {
-                    colorT = colors[Math.floor(randomR(0, colors.length))];
-                    colorB = colors[Math.floor(randomR(0, colors.length))];
+                    colorT = colors[Math.floor(randomS(0, colors.length, seed))];
+                    colorB = colors[Math.floor(randomS(0, colors.length, seed + 1))];
                     colorM = colorT.multiply(.5).add(colorB.multiply(.5));
                 }
 
@@ -295,9 +295,9 @@
 
                 // 線形合同法に基づく擬似乱数生成関数
                 function seededRandom() {
-                    const a = 1664525;
-                    const c = 1013904223;
-                    const m = Math.pow(2, 32);
+                    const a = 16645;
+                    const c = 10139;
+                    const m = 16287;
                     state = (a * state + c) % m;
                     return state / m;
                 }
