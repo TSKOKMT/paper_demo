@@ -60,7 +60,7 @@
     <body>
         <canvas id="myCanvas" resize></canvas>
         <button id="downloadButton">Download SVG</button>
-        <button id="shuffleButton">Shuffle Colors</button>
+        <button id="shuffleButton">Shuffle</button>
 
         <script>
             paper.install(window);
@@ -70,6 +70,8 @@
             let width;
             let height;
             let unit;
+
+            let isolation;
 
             var colors = [];
             let seed = 0;
@@ -89,6 +91,8 @@
                 height = view.size.height;
                 unit = Math.sqrt(width * height) / 120;
 
+                isolation = 30 * unit;
+
                 //Set color
 
                 let colorT = 'black';
@@ -97,7 +101,7 @@
 
                 if (colors.length >= 2) {
                     let indexT = Math.floor(randomS(0, colors.length, seed));
-                    let indexB = Math.floor(randomS(0, colors.length, seed + Math.pow(3, 5)));
+                    let indexB = Math.floor(randomS(0, colors.length, seed + Math.pow(5, 5)));
 
                     colorT = colors[indexT];
                     colorB = colors[indexB];
@@ -124,16 +128,19 @@
                 let tanT;
                 let tanB;
                 if (intersections.length >= 2) {
-                    tanT = Math.atan2(centerT.y - intersections[1].y, centerT.x - intersections[1].x);
+                    tanT = -Math.atan2(centerT.y - intersections[1].y, centerT.x - intersections[1].x);
                     tanB = Math.atan2(centerB.y - intersections[1].y, centerB.x - intersections[1].x);
                 }
                 else {
-                    tanT = -Math.PI / 2;
+                    tanT = Math.PI / 2;
                     tanB = Math.PI / 2;
                 }
 
-                let angleT = tanT * Math.sin(event.time);
-                let angleB = tanB * Math.sin(event.time * 1.2);
+                /*let angleT = tanT * Math.sin(event.time);
+                let angleB = tanB * Math.sin(event.time * 1.2);*/
+
+                let angleT = randomS(-Math.min(Math.PI / 2, tanT), Math.min(Math.PI / 6, tanT), seed + Math.pow(5, 6));
+                let angleB = randomS(-Math.min(Math.PI / 2, tanB), Math.min(Math.PI / 6, tanB), seed + Math.pow(5, 7));
 
                 //Set path
 
@@ -166,8 +173,9 @@
                     let point = path.getPointAt(offset);
                     point.y += textHeight / 3;
                     let tangent = path.getTangentAt(offset);
+                    let wiggle = new Point(Math.sin(event.time / (1 + i * i * .01) + i) * 4 * unit, Math.sin(event.time / (.9 + i * .01) + i * i) * 4 * unit);
 
-                    let char = new paper.PointText({
+                    let char = new PointText({
                         point: point,
                         content: word[i],
                         fillColor: colorM,
@@ -181,6 +189,7 @@
 
                     //char.rotate(tangent.angle, point);
                     char.rotate(i * 74 + event.time * (Math.sin(i + 1) * 120), point);
+                    char.position = char.position.add(wiggle);
                 }
 
                 /*new Path.Circle({
@@ -259,7 +268,7 @@
             function downloadSVG() {
                 var svg = paper.project.exportSVG({
                     asString: true,
-                    bounds: new Rectangle(0, 0, width, height)
+                    bounds: new Rectangle(-isolation, -isolation, width + isolation * 2, height + isolation * 2)
                 });
                 var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
                 var url = URL.createObjectURL(blob);
