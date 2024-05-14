@@ -30,10 +30,12 @@
                 border: 3px solid black;
                 color: black;
             }
+
             button:hover {
                 background-color: black;
                 color: white;
             }
+
             button:active {
                 background-color: black;
                 color: black;
@@ -43,6 +45,7 @@
                 right: 10px;
                 top: 10px;
             }
+
             #shuffleButton {
                 right: 10px;
                 top: calc(10px + 60px + 10px);
@@ -93,7 +96,7 @@
                 let colorM = 'black';
 
                 let indexT = Math.floor(randomS(0, colors.length, seed));
-                let indexB = Math.floor(randomS(0, colors.length, seed + 10000));
+                let indexB = Math.floor(randomS(0, colors.length, seed + 1));
                 console.log(indexT);
                 console.log(indexB);
                 if (colors.length >= 2) {
@@ -255,7 +258,7 @@
             //Actions
 
             function downloadSVG() {
-                var svg = paper.project.exportSVG({ 
+                var svg = paper.project.exportSVG({
                     asString: true,
                     bounds: new Rectangle(0, 0, width, height)
                 });
@@ -316,10 +319,11 @@
             }
 
             function randomS(min, max, seed_) {
-                const a = 1664525;
+                const a = 4294967291;
                 const c = 1013904223;
-                const m = Math.pow(2, 32);
-                return (((a * seed_ + c) % m) / m) * (max - min) + min;
+                const m = 2147483647; // 2^32
+                seed_ = (a * seed_ + c) % m;
+                return (seed_ / m) * (max - min) + min;
             }
         </script>
     </body>
