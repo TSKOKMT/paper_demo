@@ -50,6 +50,30 @@
                 right: 10px;
                 top: calc(10px + 60px + 10px);
             }
+
+            input {
+                position: fixed;
+                height: 52px;
+                width: 90px;
+                font-size: 30px;
+                padding-left: 15px;
+                padding-right: 15px;
+                border-radius: 10px;
+                background-color: transparent;
+                border: 3px solid black;
+                color: black;
+                text-align: right;
+            }
+
+            #widthInput {
+                right: 10px;
+                top: calc(10px + 60px + 10px + 60px + 10px);
+            }
+
+            #heightInput {
+                right: 10px;
+                top: calc(10px + 60px + 10px + 60px + 10px + 60px + 10px);
+            }
         </style>
 
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
@@ -61,14 +85,16 @@
         <canvas id="myCanvas" resize></canvas>
         <button id="downloadButton">Download SVG</button>
         <button id="shuffleButton">Shuffle</button>
+        <input type="text" id="widthInput" placeholder="Width" value="600">
+        <input type="text" id="heightInput" placeholder="Height" value="900">
 
         <script>
             paper.install(window);
 
             paper.setup(document.getElementById('myCanvas'));
 
-            let width;
-            let height;
+            let width = 600;
+            let height = 900;
             let unit;
 
             let isolation;
@@ -87,8 +113,8 @@
             view.onFrame = function (event) {
                 project.activeLayer.removeChildren();
 
-                width = view.size.width / 3;
-                height = view.size.height;
+                /*width = view.size.width / 3;
+                height = view.size.height;*/
                 unit = Math.sqrt(width * height) / 120;
 
                 isolation = 12 * unit;
@@ -272,6 +298,8 @@
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('downloadButton').addEventListener('click', downloadSVG);
                 document.getElementById('shuffleButton').addEventListener('click', shuffleColors);
+                document.getElementById('widthInput').addEventListener('input', (event) => { width = Number(event.target.value); });
+                document.getElementById('heightInput').addEventListener('input', (event) => { heihgt = Number(event.target.value); });
             });
 
             //Actions
