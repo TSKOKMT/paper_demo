@@ -195,15 +195,18 @@
 
                 //Draw texts
 
+                let rects = [];
+
                 for (let i = 0; i < word.length; i++) {
                     let offset = path.length / (word.length + 1) * (i + 1);
-                    let point = path.getPointAt(offset);
-                    point.y += textHeight / 3;
-                    let tangent = path.getTangentAt(offset);
+                    let position = path.getPointAt(offset);
+                    position.y += textHeight / 3;
                     let wiggle = new Point(Math.sin(event.time / (1 + i * i * .01) + i) * 4 * unit, Math.sin(event.time / (.9 + i * .01) + i * i) * 4 * unit);
+                    position = position.add(wiggle);
+                    //let tangent = path.getTangentAt(offset);
 
                     let char = new PointText({
-                        point: point,
+                        point: position,
                         content: word[i],
                         fillColor: colorM,
                         fontFamily: 'Roboto',
@@ -212,11 +215,29 @@
                         justification: 'center'
                     });
 
-                    point.y -= textHeight / 3;
+                    let charWidth = char.bounds.width;
+                    let charHeight = textHeight * .8;
 
-                    //char.rotate(tangent.angle, point);
-                    char.rotate(i * 74 + event.time * (Math.sin(i + 1) * 120), point);
-                    char.position = char.position.add(wiggle);
+                    let rotation = i * 74 + event.time * (Math.sin(i + 1) * 120);
+
+                    char.rotate(rotation);
+
+                    var rect = new Path.Rectangle({
+                        point: char.position.subtract(new Point(charWidth / 2, charHeight / 2)),
+                        size: [charWidth, charHeight],
+                        strokeColor: 'blue'
+                    });
+                    rect.rotate(rotation);
+                    rects.push(rect);
+                }
+
+                for (let i = 0; i < rects.length; i++) {
+                    for (let j = 0; j < i; j++) {
+                        if (isOverlap(rects[i], rects[j])) {
+                            rects[i].strokeColor = 'red';
+                            rects[j].strokeColor = 'red';
+                        }
+                    }
                 }
 
                 /*new Path.Circle({
@@ -371,6 +392,23 @@
                 const m = 4294967296; // 2^32
                 seed_ = (a * seed_ + c) % m;
                 return (seed_ / m) * (max - min) + min;
+            }
+
+            function isOverlap(rect1, rect2) {
+                if (rect1.getIntersections(rect2).length > 0) {
+                    return true;
+                }
+                var points = rect1.segments.map(segment => segment.point);
+                var allInside = points.every(point => rect2.contains(point));
+                if (allInside) {
+                    return true;
+                }
+                points = rect2.segments.map(segment => segment.point);
+                allInside = points.every(point => rect1.contains(point));
+                if (allInside) {
+                    return true;
+                }
+                return false;
             }
         </script>
     </body>
